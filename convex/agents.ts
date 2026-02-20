@@ -74,3 +74,20 @@ export const getAgentTasks = query({
       .collect();
   },
 });
+
+export const updateTaskStatus = mutation({
+  args: {
+    taskId: v.id("tasks"),
+    status: v.union(
+      v.literal("pending"),
+      v.literal("in_progress"),
+      v.literal("completed")
+    ),
+  },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.taskId, {
+      status: args.status,
+      updatedAt: Date.now(),
+    });
+  },
+});
